@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -100,6 +101,21 @@ public class Station {
 
     public void setAltitude(Float altitude) {
         this.altitude = altitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Station station = (Station) o;
+        return Objects.equals(idStation, station.idStation) &&
+                Objects.equals(unitOfMeasure, station.unitOfMeasure) &&
+                Objects.equals(name, station.name) &&
+                Objects.equals(type, station.type) &&
+                Objects.equals(latitude, station.latitude) &&
+                Objects.equals(longitude, station.longitude) &&
+                Objects.equals(altitude, station.altitude) &&
+                Objects.equals(datumSet, station.datumSet);
     }
 
 }

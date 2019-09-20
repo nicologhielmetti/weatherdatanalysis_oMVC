@@ -1,19 +1,43 @@
 package State;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import State.Model.Station;
+
+import Utils.HibernateUtil;
+import Utils.ServerOutcome;
+
 
 /**
  * This class should contains the
  */
 
 public class State implements Serializable {
-    private static ArrayList<Station> state;
+    private Map<Integer, ServerOutcome> serverOutcomeMap;
+    private static final State instance = new State();
 
-    private State(){ state = new ArrayList<>(); }
+    private State(){
+        serverOutcomeMap = new HashMap<>();
+    }
 
-    public static ArrayList<Station> getInstance() { return state; }
+    public static State getInstance() { return instance; }
+
+    public Map<Integer, ServerOutcome> getServerOutcomeMap() {
+        return serverOutcomeMap;
+    }
+
+    public void setServerOutcomeMap(Map<Integer,ServerOutcome> serverOutcomeMap) {
+        this.serverOutcomeMap = serverOutcomeMap;
+    }
+
+    public void executeInsert(Collection<?> data) {
+        HibernateUtil.executeInsert(data);
+    }
+
+    public void executeInsert(Object data) {
+        HibernateUtil.executeInsert(data);
+    }
+
+
 }

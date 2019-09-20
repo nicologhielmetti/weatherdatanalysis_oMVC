@@ -1,6 +1,7 @@
 package State.Model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "DatumMountain")
@@ -32,5 +33,15 @@ public class DatumMountain extends Datum{
     public String getFieldsAsCSV() {
         return super.getFieldsAsCSV() + "," + snowLevel;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        DatumMountain that = (DatumMountain) o;
+        return Objects.equals(snowLevel, that.snowLevel);
+    }
+
 }
 

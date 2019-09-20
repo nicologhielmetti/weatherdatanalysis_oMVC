@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -126,4 +127,19 @@ public abstract class Datum {
         return this.datumPK.getTimestamp() + "," + temperature + "," + pressure + "," + humidity + "," + rain + "," + windModule + "," + windDirection;
 
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Datum datum = (Datum) o;
+        return Objects.equals(datumPK, datum.datumPK) &&
+                Objects.equals(temperature, datum.temperature) &&
+                Objects.equals(pressure, datum.pressure) &&
+                Objects.equals(humidity, datum.humidity) &&
+                Objects.equals(rain, datum.rain) &&
+                Objects.equals(windModule, datum.windModule) &&
+                Objects.equals(windDirection, datum.windDirection);
+    }
+
 }

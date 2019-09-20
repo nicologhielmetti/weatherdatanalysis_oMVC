@@ -5,7 +5,7 @@ import State.State;
 
 public class RegisterStationStatePolicy implements StatePolicy {
     @Override
-    public void apply(State state, Action action) {
-
+    public State apply(State state, Action action) {
+        return State.getInstance();
     }
 }

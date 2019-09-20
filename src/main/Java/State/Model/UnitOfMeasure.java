@@ -1,6 +1,7 @@
 package State.Model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="UnitOfMeasure")
@@ -119,6 +120,24 @@ public class UnitOfMeasure {
 
     public void setPollutionLevel(String pollutionLevel) {
         this.pollutionLevel = pollutionLevel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UnitOfMeasure that = (UnitOfMeasure) o;
+        return Objects.equals(idUnitOfMeasure, that.idUnitOfMeasure) &&
+                Objects.equals(temperature, that.temperature) &&
+                Objects.equals(pressure, that.pressure) &&
+                Objects.equals(humidity, that.humidity) &&
+                Objects.equals(rain, that.rain) &&
+                Objects.equals(windModule, that.windModule) &&
+                Objects.equals(windDirection, that.windDirection) &&
+                Objects.equals(dewPt, that.dewPt) &&
+                Objects.equals(uvRadiation, that.uvRadiation) &&
+                Objects.equals(snowLevel, that.snowLevel) &&
+                Objects.equals(pollutionLevel, that.pollutionLevel);
     }
 
 }

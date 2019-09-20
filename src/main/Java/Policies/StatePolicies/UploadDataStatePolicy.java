@@ -5,6 +5,7 @@ import Actions.UploadDataAction;
 import State.Model.*;
 import State.State;
 import Utils.HibernateUtil;
+import Utils.ServerInfo;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -19,7 +20,7 @@ import java.util.Vector;
 
 public class UploadDataStatePolicy implements StatePolicy {
     @Override
-    public void apply(State state, Action action) {
+    public State apply(State state, Action action) {
         UploadDataAction uploadDataAction = (UploadDataAction) action;
         String hql = "FROM Station WHERE idStation = :idStation";
         Integer idStation = uploadDataAction.getIdStation();
@@ -75,10 +76,16 @@ public class UploadDataStatePolicy implements StatePolicy {
                     // if a datum contains an invalid field, skip it
                 }
             }
+
+            state.executeInsert(dataToUpload);
+
         } catch (IllegalArgumentException | IOException e) {
-            action.setOutcome("The .csv file you are trying to upload does not fit for the selected station. Use another one.");
-            return;
+            state.setServerInfo(new ServerInfo(e, "The .csv file you are trying to upload does not fit for the selected station. Use another one."));
+            return state;
         }
-        action.setOutcome("Your .csv file has been successfully uploaded.");
+
+
+        state.setServerInfo(new ServerInfo(null, "Your .csv file has been successfully uploaded."));
+        return state;
     }
 }

@@ -49,9 +49,4 @@ public class DatumPK implements Serializable {
         return timestamp.equals(datumPK.timestamp) &&
                 station.equals(datumPK.station);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(timestamp, station);
-    }
 }
