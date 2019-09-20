@@ -1,6 +1,7 @@
 package ViewNormal;
 
 import Actions.RetrieveMinimizedStationsAction;
+import State.ArchState;
 import State.WebAppState;
 import Stores.Store;
 import Utils.ServerOutcome;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -23,9 +25,6 @@ public class RetrieveMinimizedStationsServlet extends HttpServlet implements Pro
     @Override
     public void init() throws ServletException {
         Store.getInstance().observeState(this);
-        requests = new ConcurrentHashMap<>();
-        responses = new ConcurrentHashMap<>();
-        retrieveMinimizedStationsActions = new ConcurrentHashMap<>();
         super.init();
     }
 
@@ -35,14 +34,14 @@ public class RetrieveMinimizedStationsServlet extends HttpServlet implements Pro
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Long requestIdentifier = timestamp;
+        Long requestIdentifier = new Date().getTime();
         RetrieveMinimizedStationsAction retrieveMinimizedStationsAction = new RetrieveMinimizedStationsAction();
-        // populate retrieveMinimizedStationsAction
-        requests.put(requestIdentifier, request);
-        responses.put(requestIdentifier, response);
-        retrieveMinimizedStationsActions.put(requestIdentifier, retrieveMinimizedStationsAction);
+        ArchState archState = ArchState.getInstance();
+        archState.getActions().put(requestIdentifier, retrieveMinimizedStationsAction);
+        archState.getRequests().put(requestIdentifier, request);
+        archState.getResponses().put(requestIdentifier, response);
 
-        Store.getInstance().propagateAction(retrieveMinimizedStationsAction);
+        Store.getInstance().propagateAction(retrieveMinimizedStationsAction, requestIdentifier);
     }
 
     @Override

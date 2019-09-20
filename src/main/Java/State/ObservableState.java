@@ -20,7 +20,7 @@ public class ObservableState {
         return webAppState;
     }
 
-    public void setState(WebAppState webAppState, Action action){
+    public void setState(WebAppState webAppState, Action action, Long requestIdentifier){
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, action.getActionIdentifier(), this.webAppState, webAppState));
         this.webAppState = webAppState;
     }

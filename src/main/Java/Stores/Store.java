@@ -29,13 +29,13 @@ public class Store {
         this.actionGroupToResolver.put("@CONCRETE_RESOLVER", new ConcreteResolver());
     }
 
-    public synchronized void propagateAction(Action action) {
+    public synchronized void propagateAction(Action action, Long requestIdentifier) {
         Resolver resolver = this.actionGroupToResolver.get(action.getActionGroupIdentifier());
         try {
             PolicyCouple policyCouple = resolver.resolve(action);
             //TODO: log state pre action propagation
             if (policyCouple.getStatePolicy() != null){
-                //this.observableState.setServerState(policyCouple.getStatePolicy().apply(this.getWebAppState(), action),action);
+                this.observableState.setState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action),action, requestIdentifier);
             }
             //TODO: log state post action propagation
             if (policyCouple.getSidePolicy() != null){
@@ -49,5 +49,9 @@ public class Store {
 
     public void observeState(PropertyChangeListener propertyChangeListener) {
         this.observableState.addChangeListener(propertyChangeListener);
+    }
+
+    public WebAppState getWebAppState() {
+        return this.observableState.getWebAppState();
     }
 }
