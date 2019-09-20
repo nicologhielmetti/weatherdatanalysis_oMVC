@@ -1,8 +1,8 @@
 package Policies.StatePolicies;
 
 import Actions.Action;
-import State.State;
+import State.WebAppState;
 
 public interface StatePolicy {
-    State apply(State state, Action action);
+    WebAppState apply(WebAppState webAppState, Action action);
 }

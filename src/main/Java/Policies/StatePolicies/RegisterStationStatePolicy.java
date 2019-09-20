@@ -1,11 +1,11 @@
 package Policies.StatePolicies;
 
 import Actions.Action;
-import State.State;
+import State.WebAppState;
 
 public class RegisterStationStatePolicy implements StatePolicy {
     @Override
-    public State apply(State state, Action action) {
-        return State.getInstance();
+    public WebAppState apply(WebAppState webAppState, Action action) {
+        return WebAppState.getInstance();
     }
 }

@@ -1,8 +1,8 @@
 package Policies.SidePolicies;
 
 import Actions.Action;
-import State.State;
+import State.WebAppState;
 
 public interface SidePolicy {
-    void apply(State state, Action action);
+    void apply(WebAppState webAppState, Action action);
 }

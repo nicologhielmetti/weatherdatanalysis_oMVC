@@ -5,9 +5,8 @@ import Resolvers.ConcreteResolver;
 import Resolvers.PolicyCouple;
 import Resolvers.Resolver;
 import State.ObservableState;
-import State.State;
+import State.WebAppState;
 
-import javax.servlet.http.HttpServlet;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class Store {
 
     private Store() {
         this.actionGroupToResolver = new HashMap<>();
-        this.observableState = new ObservableState(State.getInstance());
+        this.observableState = new ObservableState(WebAppState.getInstance());
     }
 
     public static Store getInstance() {
@@ -36,11 +35,11 @@ public class Store {
             PolicyCouple policyCouple = resolver.resolve(action);
             //TODO: log state pre action propagation
             if (policyCouple.getStatePolicy() != null){
-                //this.observableState.setServerState(policyCouple.getStatePolicy().apply(this.getState(), action),action);
+                //this.observableState.setServerState(policyCouple.getStatePolicy().apply(this.getWebAppState(), action),action);
             }
             //TODO: log state post action propagation
             if (policyCouple.getSidePolicy() != null){
-                //policyCouple.getSidePolicy().apply(this.getState(),action);
+                //policyCouple.getSidePolicy().apply(this.getWebAppState(),action);
             }
 
         } catch (Exception e) {

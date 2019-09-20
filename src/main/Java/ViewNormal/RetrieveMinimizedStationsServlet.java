@@ -1,8 +1,7 @@
 package ViewNormal;
 
-import Actions.Action;
 import Actions.RetrieveMinimizedStationsAction;
-import State.State;
+import State.WebAppState;
 import Stores.Store;
 import Utils.ServerOutcome;
 
@@ -14,17 +13,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @WebServlet(name = "RetrieveMinimizedStationsServlet")
 public class RetrieveMinimizedStationsServlet extends HttpServlet implements PropertyChangeListener {
-    HttpServletRequest request;
-    HttpServletResponse response;
-    RetrieveMinimizedStationsAction retrieveMinimizedStationsAction;
-    Integer requestIdentifier;
+
 
     @Override
     public void init() throws ServletException {
         Store.getInstance().observeState(this);
+        requests = new ConcurrentHashMap<>();
+        responses = new ConcurrentHashMap<>();
+        retrieveMinimizedStationsActions = new ConcurrentHashMap<>();
         super.init();
     }
 
@@ -33,27 +34,29 @@ public class RetrieveMinimizedStationsServlet extends HttpServlet implements Pro
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.request = request;
-        this.response = response;
-        retrieveMinimizedStationsAction = new RetrieveMinimizedStationsAction();
-        //requestIdentifier = Generator.generateNumber();
 
+        Long requestIdentifier = timestamp;
+        RetrieveMinimizedStationsAction retrieveMinimizedStationsAction = new RetrieveMinimizedStationsAction();
         // populate retrieveMinimizedStationsAction
+        requests.put(requestIdentifier, request);
+        responses.put(requestIdentifier, response);
+        retrieveMinimizedStationsActions.put(requestIdentifier, retrieveMinimizedStationsAction);
 
         Store.getInstance().propagateAction(retrieveMinimizedStationsAction);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        State oldState = (State) evt.getOldValue();
-        State newState = (State) evt.getNewValue();
+        WebAppState oldWebAppState = (WebAppState) evt.getOldValue();
+        WebAppState newWebAppState = (WebAppState) evt.getNewValue();
         if (evt.getPropertyName().equals(retrieveMinimizedStationsAction.getActionIdentifier())) {
-            ServerOutcome serverOutcome = State.getInstance().getServerOutcomeMap().get(requestIdentifier);
+            ServerOutcome serverOutcome = WebAppState.getInstance().getServerOutcomeMap().get(requestIdentifier);
             if (serverOutcome.getException() == null) {
                 // the request has been completed successfully.
             } else {
                 // something went wrong, notify user.
             }
+
         }
     }
 }

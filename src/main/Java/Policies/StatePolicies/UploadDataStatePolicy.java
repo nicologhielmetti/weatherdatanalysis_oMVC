@@ -3,7 +3,7 @@ package Policies.StatePolicies;
 import Actions.Action;
 import Actions.UploadDataAction;
 import State.Model.*;
-import State.State;
+import State.WebAppState;
 import Utils.HibernateUtil;
 import Utils.ServerInfo;
 import org.apache.commons.csv.CSVFormat;
@@ -20,7 +20,7 @@ import java.util.Vector;
 
 public class UploadDataStatePolicy implements StatePolicy {
     @Override
-    public State apply(State state, Action action) {
+    public WebAppState apply(WebAppState webAppState, Action action) {
         UploadDataAction uploadDataAction = (UploadDataAction) action;
         String hql = "FROM Station WHERE idStation = :idStation";
         Integer idStation = uploadDataAction.getIdStation();
@@ -77,15 +77,15 @@ public class UploadDataStatePolicy implements StatePolicy {
                 }
             }
 
-            state.executeInsert(dataToUpload);
+            webAppState.executeInsert(dataToUpload);
 
         } catch (IllegalArgumentException | IOException e) {
-            state.setServerInfo(new ServerInfo(e, "The .csv file you are trying to upload does not fit for the selected station. Use another one."));
-            return state;
+            webAppState.setServerInfo(new ServerInfo(e, "The .csv file you are trying to upload does not fit for the selected station. Use another one."));
+            return webAppState;
         }
 
 
-        state.setServerInfo(new ServerInfo(null, "Your .csv file has been successfully uploaded."));
-        return state;
+        webAppState.setServerInfo(new ServerInfo(null, "Your .csv file has been successfully uploaded."));
+        return webAppState;
     }
 }
