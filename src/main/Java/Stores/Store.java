@@ -7,7 +7,7 @@ import Resolvers.Resolver;
 import State.ArchState;
 import State.ObservableState;
 import State.WebAppState;
-
+import Utils.StoreLogger;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,31 +16,36 @@ public class Store {
     private static final Store store = new Store();
     private final Map<String, Resolver> actionGroupToResolver;
     private final ObservableState observableState;
+    private final StoreLogger storeLogger;
 
     private Store() {
         this.actionGroupToResolver = new HashMap<>();
         this.observableState = new ObservableState(ArchState.getInstance().getWebAppState());
+        this.storeLogger = StoreLogger.getInstance();
     }
 
     public static Store getInstance() {
         return store;
     }
 
+
     private void fillResolverMap() {
         this.actionGroupToResolver.put("@CONCRETE_RESOLVER", new ConcreteResolver());
     }
 
+    // information redundancy: the action as parameter of propagateAction method can be avoided
     public synchronized void propagateAction(Action action, Long requestIdentifier) {
         Resolver resolver = this.actionGroupToResolver.get(action.getActionGroupIdentifier());
         try {
             PolicyCouple policyCouple = resolver.resolve(action);
-            //TODO: log state pre action propagation
+            storeLogger.logPreActionPropagation(requestIdentifier);
             if (policyCouple.getStatePolicy() != null){
-                this.observableState.setState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action),action, requestIdentifier);
+                this.observableState.setState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action, requestIdentifier),action, requestIdentifier);
             }
-            //TODO: log state post action propagation
+            storeLogger.logPostActionPropagation(requestIdentifier);
             if (policyCouple.getSidePolicy() != null){
-                //policyCouple.getSidePolicy().apply(this.getWebAppState(),action);
+                // also side policies call the observable state method setState, triggering the onWebAppStateChange method in the servlets
+                this.observableState.setState(policyCouple.getSidePolicy().apply(this.getWebAppState(),action, requestIdentifier),action, requestIdentifier);
             }
 
         } catch (Exception e) {

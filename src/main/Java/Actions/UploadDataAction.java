@@ -28,7 +28,6 @@ public class UploadDataAction extends Action {
     public String toString() {
         return "UploadDataAction{" +
                 "idStation=" + idStation +
-                ", filePart=" + filePart +
                 '}';
     }
 }

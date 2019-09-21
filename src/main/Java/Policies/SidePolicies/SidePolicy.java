@@ -4,5 +4,5 @@ import Actions.Action;
 import State.WebAppState;
 
 public interface SidePolicy {
-    void apply(WebAppState webAppState, Action action);
+    WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier);
 }
