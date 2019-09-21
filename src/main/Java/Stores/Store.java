@@ -4,6 +4,7 @@ import Actions.Action;
 import Resolvers.ConcreteResolver;
 import Resolvers.PolicyCouple;
 import Resolvers.Resolver;
+import State.ArchState;
 import State.ObservableState;
 import State.WebAppState;
 
@@ -18,7 +19,7 @@ public class Store {
 
     private Store() {
         this.actionGroupToResolver = new HashMap<>();
-        this.observableState = new ObservableState(WebAppState.getInstance());
+        this.observableState = new ObservableState(ArchState.getInstance().getWebAppState());
     }
 
     public static Store getInstance() {

@@ -23,13 +23,14 @@ public class ArchState implements Serializable {
     private ConcurrentMap<Long, HttpServletResponse> responses;
     private ConcurrentMap<Long, Action> actions;
     private static ArchState archState = new ArchState();
+
     private WebAppState webAppState;
 
     private ArchState() {
         this.requests = new ConcurrentHashMap<>();
         this.responses = new ConcurrentHashMap<>();
         this.actions = new ConcurrentHashMap<>();
-        this.webAppState = WebAppState.getInstance();
+        this.webAppState = new WebAppState();
     }
 
     public static ArchState getInstance() {
@@ -58,5 +59,9 @@ public class ArchState implements Serializable {
 
     public void setActions(ConcurrentMap<Long, Action> actions) {
         this.actions = actions;
+    }
+
+    public WebAppState getWebAppState() {
+        return webAppState;
     }
 }
