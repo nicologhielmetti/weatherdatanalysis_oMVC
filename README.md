@@ -1,5 +1,6 @@
 # Weather Data Analysis
 This project is a web application developed using a revised version of MVC pattern, namely oMVC, which is focused on the observability by-design of all the relevant parts of the architecture that can change over time.
+
 Simple MVC version --> https://github.com/francescoalongi/weatherdataanalysis_MVC
 
 ## Class diagram
