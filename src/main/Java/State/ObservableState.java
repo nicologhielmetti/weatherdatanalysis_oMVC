@@ -9,20 +9,20 @@ import java.beans.PropertyChangeSupport;
 public class ObservableState {
     private PropertyChangeSupport propertyChangeSupport;
 
-    private WebAppState webAppState;
+    private ArchState archState;
 
-    public ObservableState(WebAppState webAppState){
-        this.webAppState = webAppState;
-        propertyChangeSupport = new PropertyChangeSupport(webAppState);
+    public ObservableState(ArchState archState){
+        this.archState = archState;
+        propertyChangeSupport = new PropertyChangeSupport(archState);
     }
 
     public WebAppState getWebAppState() {
-        return webAppState;
+        return this.archState.getWebAppState();
     }
 
-    public void setState(WebAppState webAppState, Action action, Long requestIdentifier){
-        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, action.getActionIdentifier(), this.webAppState, webAppState));
-        this.webAppState = webAppState;
+    public void setState(ArchState archState, Action action, Long requestIdentifier){
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, action.getActionIdentifier(), this.archState, archState));
+        this.archState = archState;
     }
 
     public void addChangeListener(PropertyChangeListener propertyChangeListener) {

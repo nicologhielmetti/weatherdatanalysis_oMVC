@@ -20,7 +20,7 @@ public class Store {
 
     private Store() {
         this.actionGroupToResolver = new HashMap<>();
-        this.observableState = new ObservableState(ArchState.getInstance().getWebAppState());
+        this.observableState = new ObservableState(ArchState.getInstance());
         this.storeLogger = StoreLogger.getInstance();
     }
 
@@ -40,12 +40,15 @@ public class Store {
             PolicyCouple policyCouple = resolver.resolve(action);
             storeLogger.logPreActionPropagation(requestIdentifier);
             if (policyCouple.getStatePolicy() != null){
-                this.observableState.setState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action, requestIdentifier),action, requestIdentifier);
+                ArchState.getInstance().setWebAppState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action, requestIdentifier));
+                this.observableState.setState(ArchState.getInstance(), action, requestIdentifier);
             }
+
             storeLogger.logPostActionPropagation(requestIdentifier);
             if (policyCouple.getSidePolicy() != null){
                 // also side policies call the observable state method setState, triggering the onWebAppStateChange method in the servlets
-                this.observableState.setState(policyCouple.getSidePolicy().apply(this.getWebAppState(),action, requestIdentifier),action, requestIdentifier);
+                ArchState.getInstance().setWebAppState(policyCouple.getSidePolicy().apply(this.getWebAppState(),action, requestIdentifier));
+                this.observableState.setState(ArchState.getInstance(), action, requestIdentifier);
             }
 
         } catch (Exception e) {

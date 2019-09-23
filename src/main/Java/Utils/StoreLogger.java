@@ -2,6 +2,7 @@ package Utils;
 
 import State.ArchState;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +69,9 @@ public class StoreLogger {
         this.logger.log(Level.INFO, "@@PRE_TIMESTAMP@@");
         this.logger.log(Level.INFO, new Date().getTime() + "");
         this.logger.log(Level.INFO, "@@PRE_STATE@@");
-        this.logger.log(Level.INFO, "HttpServletRequest: " + new HttpServletRequestSerialized(archState.getRequests().get(requestIdentifier), requestIdentifier).serialize());
+        this.logger.log(Level.INFO, "HttpServletRequest: " + new HttpServletRequestSerialized(
+                archState.getRequests().get(requestIdentifier), requestIdentifier).serialize()
+        );
     }
 
 

@@ -64,4 +64,8 @@ public class ArchState implements Serializable {
     public WebAppState getWebAppState() {
         return webAppState;
     }
+
+    public void setWebAppState(WebAppState webAppState) {
+        this.webAppState = webAppState;
+    }
 }
