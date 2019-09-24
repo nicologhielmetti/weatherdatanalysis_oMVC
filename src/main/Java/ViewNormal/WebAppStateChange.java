@@ -3,7 +3,6 @@ package ViewNormal;
 import State.WebAppState;
 
 import javax.servlet.ServletException;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
 public interface WebAppStateChange {

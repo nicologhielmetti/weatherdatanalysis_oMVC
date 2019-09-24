@@ -19,10 +19,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public class ArchState implements Serializable {
-    private ConcurrentMap<Long, HttpServletRequest> requests;
-    private ConcurrentMap<Long, HttpServletResponse> responses;
-    private ConcurrentMap<Long, Action> actions;
     private static ArchState archState = new ArchState();
+
+    private ConcurrentHashMap<Long, HttpServletRequest> requests;
+    private ConcurrentHashMap<Long, HttpServletResponse> responses;
+    private ConcurrentHashMap<Long, Action> actions;
 
     private WebAppState webAppState;
 
@@ -41,7 +42,7 @@ public class ArchState implements Serializable {
         return requests;
     }
 
-    public void setRequests(ConcurrentMap<Long, HttpServletRequest> requests) {
+    public void setRequests(ConcurrentHashMap<Long, HttpServletRequest> requests) {
         this.requests = requests;
     }
 
@@ -49,7 +50,7 @@ public class ArchState implements Serializable {
         return responses;
     }
 
-    public void setResponses(ConcurrentMap<Long, HttpServletResponse> responses) {
+    public void setResponses(ConcurrentHashMap<Long, HttpServletResponse> responses) {
         this.responses = responses;
     }
 
@@ -57,7 +58,7 @@ public class ArchState implements Serializable {
         return actions;
     }
 
-    public void setActions(ConcurrentMap<Long, Action> actions) {
+    public void setActions(ConcurrentHashMap<Long, Action> actions) {
         this.actions = actions;
     }
 

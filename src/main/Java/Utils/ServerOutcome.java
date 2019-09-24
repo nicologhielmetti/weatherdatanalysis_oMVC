@@ -1,7 +1,7 @@
 package Utils;
 
 public class ServerOutcome {
-    private Object outcome;
+    private Object outcome; //data from server response
     private Exception exception;
 
     public ServerOutcome(Exception exception, String outcome) {

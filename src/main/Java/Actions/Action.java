@@ -3,8 +3,8 @@ package Actions;
 import java.io.Serializable;
 
 public abstract class Action implements Serializable {
-    protected final String actionIdentifier;
-    protected final String actionGroupIdentifier;
+    private final String actionIdentifier;
+    private final String actionGroupIdentifier;
 
 
 

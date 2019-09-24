@@ -40,8 +40,16 @@ public class HibernateUtil
         sessionFactory.close();
     }
 
-    public static Object executeSelect(String queryString, boolean isResultList, Map<String, Object> params) {
+    public static HibernateResult executeSelect(String queryString, boolean isResultList, Map<String, Object> params) {
         Session session = HibernateUtil.getSessionFactory().openSession();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        PrintStream old = System.out;
+        System.setOut(ps);
+
+        HibernateResult results = new HibernateResult();
+
         Transaction tr = session.beginTransaction();
         Query query = session.createQuery(queryString);
         if ((params == null && !query.getParameters().isEmpty()) ||
@@ -50,21 +58,16 @@ public class HibernateUtil
         if (params != null)
             for (Map.Entry<String, Object> entry : params.entrySet())
                 query.setParameter(entry.getKey(), entry.getValue());
-        Object results;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
-        PrintStream old = System.out;
-        System.setOut(ps);
+
         if (isResultList)
-            results = query.getResultList();
+            results.setResponse(query.getResultList());
         else
-            results = query.getSingleResult();
-        String log = "";
+            results.setResponse(query.getSingleResult());
         try {
             tr.commit();
-            log = baos.toString();
+            results.setMsg(baos.toString());
         } catch (RollbackException e) {
-            log = e.getMessage();
+            results.setMsg(e.getMessage());
             System.err.println(e.getMessage());
             tr.rollback();
         } finally {
@@ -75,26 +78,27 @@ public class HibernateUtil
         return results;
     }
 
-    public static Object executeSelect(String queryString, boolean isResultList) {
+    public static HibernateResult executeSelect(String queryString, boolean isResultList) {
         Session session = HibernateUtil.getSessionFactory().openSession();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        PrintStream old = System.out;
+        System.setOut(ps);
+
         Transaction tr = session.beginTransaction();
         Query query = session.createQuery(queryString);
-        Object results;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
-        PrintStream old = System.out;
-        System.setOut(ps);
+        HibernateResult results = new HibernateResult();
         if (isResultList)
-            results = query.list();
+            results.setResponse(query.list());
         else
-            results = query.getSingleResult();
+            results.setResponse(query.getSingleResult());
 
-        String log = "";
         try {
             tr.commit();
-            log = baos.toString();
+            results.setMsg(baos.toString());
         } catch (RollbackException e) {
-            log = e.getMessage();
+            results.setMsg(e.getMessage());
             System.err.println(e.getMessage());
             tr.rollback();
         } finally {
@@ -105,17 +109,19 @@ public class HibernateUtil
         return results;
     }
 
-    public static void executeInsert(Collection<?> data) {
+    public static HibernateResult executeInsert(Collection<?> data) {
         if (!data.iterator().next().getClass().getPackage().getName().equals("Model"))
             throw new IllegalArgumentException();
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tr = session.beginTransaction();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         PrintStream old = System.out;
         System.setOut(ps);
 
+        HibernateResult result = new HibernateResult(null);
+
+        Transaction tr = session.beginTransaction();
         int i = 0;
         int batchSize = Integer.parseInt(new Configuration().configure().getProperty("hibernate.jdbc.batch_size"));
         for (Object datum : data) {
@@ -126,14 +132,11 @@ public class HibernateUtil
                 session.clear();
             }
         }
-
-        String log = "";
-
         try {
             tr.commit();
-            log = baos.toString();
+            result.setMsg(baos.toString());
         } catch (RollbackException e) {
-            log = e.getMessage();
+            result.setMsg(e.getMessage());
             System.err.println(e.getMessage());
             tr.rollback();
         } finally {
@@ -141,31 +144,37 @@ public class HibernateUtil
         }
         System.out.flush();
         System.setOut(old);
+        return result;
     }
 
-    public static void executeInsert(Object data) {
+    public static HibernateResult executeInsert(Object data) {
         if (!data.getClass().getPackage().getName().equals("Model"))
             throw new IllegalArgumentException();
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tr = session.beginTransaction();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         PrintStream old = System.out;
         System.setOut(ps);
+
+        HibernateResult result = new HibernateResult(null);
+
+        Transaction tr = session.beginTransaction();
+
         session.save(data);
 
-        String log = "";
         try {
             tr.commit();
-            log = baos.toString();
+            result.setMsg(baos.toString());
         } catch (RollbackException e) {
-            log = e.getMessage();
+            result.setMsg(e.getMessage());
             tr.rollback();
         } finally {
             session.close();
         }
         System.out.flush();
         System.setOut(old);
+        return result;
     }
 
 }

@@ -13,7 +13,7 @@ public class WebAppStateChangeObserver implements PropertyChangeListener {
     private String actionId;
     private WebAppStateChange webAppStateChange;
 
-    WebAppStateChangeObserver(Long requestId, String actionId, WebAppStateChange webAppStateChange) throws ServletException, IOException{
+    WebAppStateChangeObserver(Long requestId, String actionId, WebAppStateChange webAppStateChange){
         Store.getInstance().observeState(this);
         this.requestId = requestId;
         this.actionId = actionId;
@@ -21,9 +21,13 @@ public class WebAppStateChangeObserver implements PropertyChangeListener {
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent propertyChangeEvent)  {
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        try {
             webAppStateChange.onWebAppStateChange((WebAppState) propertyChangeEvent.getOldValue(),
                     (WebAppState) propertyChangeEvent.getNewValue(), this.actionId, this.requestId);
+        } catch (IOException | ServletException e) {
+            e.printStackTrace();
+        }
 
     }
 

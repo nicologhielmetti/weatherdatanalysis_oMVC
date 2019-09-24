@@ -4,6 +4,7 @@ import Actions.Action;
 import Actions.UploadDataAction;
 import State.Model.*;
 import State.WebAppState;
+import Utils.HibernateResult;
 import Utils.HibernateUtil;
 import Utils.ServerOutcome;
 import org.apache.commons.csv.CSVFormat;
@@ -29,7 +30,7 @@ public class UploadDataStatePolicy implements StatePolicy {
         try {
             Map<String, Object> param = new HashMap<>();
             param.put("idStation", idStation);
-            Station station = (Station) HibernateUtil.executeSelect(hql, false, param);
+            Station station = (Station)(HibernateUtil.executeSelect(hql, false, param)).getResponse();
             InputStream fileContent = uploadDataAction.getFilePart().getInputStream();
             Reader in = new InputStreamReader(fileContent, StandardCharsets.UTF_8);
             Iterable<CSVRecord> records = CSVFormat.EXCEL.withFirstRecordAsHeader().parse(in);
@@ -78,8 +79,8 @@ public class UploadDataStatePolicy implements StatePolicy {
                 }
             }
 
-            webAppState.executeInsert(dataToUpload);
-            webAppState.getModifiedDbInfo().put(requestIdentifier, new ObjectMapper().writeValueAsString(dataToUpload));
+            HibernateResult result = HibernateUtil.executeInsert(dataToUpload);
+            webAppState.getLogMap().put(requestIdentifier, result.getMsg());
 
         } catch (IllegalArgumentException | IOException e) {
             webAppState.getServerOutcomeMap().put(requestIdentifier,new ServerOutcome(e, "The .csv file you are trying to upload does not fit for the selected station. Use another one."));
