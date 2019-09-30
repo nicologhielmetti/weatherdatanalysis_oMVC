@@ -2,22 +2,24 @@ package Actions;
 
 import State.Model.Station;
 
-public class CreateStationAction extends Action{
-    private Station station;
+import java.io.BufferedReader;
 
-    public CreateStationAction (Station station) {
+public class CreateStationAction extends Action{
+    BufferedReader br;
+
+    public CreateStationAction (BufferedReader br) {
         super("@CREATE_STATION_ACTION", "@CONCRETE_RESOLVER");
-        this.station = station;
+        this.br = br;
     }
 
-    public Station getStation() {
-        return station;
+    public BufferedReader getBufferedReader() {
+        return br;
     }
 
     @Override
     public String toString() {
         return "CreateStationAction{" +
-                "station=" + station +
+                "station=" + br +
                 "}";
     }
 }

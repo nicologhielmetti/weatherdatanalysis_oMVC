@@ -8,7 +8,12 @@ import State.ArchState;
 import State.ObservableState;
 import State.WebAppState;
 import Utils.StoreLogger;
+import ViewNormal.WebAppStateChange;
+import ViewNormal.WebAppStateChangeObserver;
+
+import javax.servlet.ServletException;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +27,7 @@ public class Store {
         this.actionGroupToResolver = new HashMap<>();
         this.observableState = new ObservableState(ArchState.getInstance());
         this.storeLogger = StoreLogger.getInstance();
+        this.fillResolverMap();
     }
 
     public static Store getInstance() {
@@ -34,26 +40,32 @@ public class Store {
     }
 
     // information redundancy: the action as parameter of propagateAction method can be avoided
-    public synchronized void propagateAction(Action action, Long requestIdentifier) {
+    public synchronized void propagateAction(Action action, Long requestIdentifier, WebAppStateChange webAppStateChange) throws IOException, ServletException {
+        //this.observableState.addChangeListener(webAppStateChangeObserver);
         Resolver resolver = this.actionGroupToResolver.get(action.getActionGroupIdentifier());
         try {
             PolicyCouple policyCouple = resolver.resolve(action);
             storeLogger.logPreActionPropagation(requestIdentifier);
             if (policyCouple.getStatePolicy() != null){
-                ArchState.getInstance().setWebAppState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action, requestIdentifier));
-                this.observableState.setState(ArchState.getInstance(), action, requestIdentifier);
+                //ArchState.getInstance().setWebAppState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action, requestIdentifier));
+                //this.observableState.setState(ArchState.getInstance(), action, requestIdentifier);
+                this.observableState.setState(policyCouple.getStatePolicy().apply(this.getWebAppState(),action, requestIdentifier), action, requestIdentifier);
+
             }
 
-            storeLogger.logPostActionPropagation(requestIdentifier);
             if (policyCouple.getSidePolicy() != null){
                 // also side policies call the observable state method setState, triggering the onWebAppStateChange method in the servlets
-                ArchState.getInstance().setWebAppState(policyCouple.getSidePolicy().apply(this.getWebAppState(),action, requestIdentifier));
-                this.observableState.setState(ArchState.getInstance(), action, requestIdentifier);
+                //ArchState.getInstance().setWebAppState(policyCouple.getSidePolicy().apply(this.getWebAppState(),action, requestIdentifier));
+                //this.observableState.setState(ArchState.getInstance(), action, requestIdentifier);
+                this.observableState.setState(policyCouple.getSidePolicy().apply(this.getWebAppState(),action, requestIdentifier), action, requestIdentifier);
             }
+            storeLogger.logPostActionPropagation(requestIdentifier);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        webAppStateChange.onWebAppStateChange(this.getWebAppState(), this.getWebAppState(), action.getActionIdentifier(), requestIdentifier);
+        //this.observableState.removeChangeListener(webAppStateChangeObserver);
     }
 
     public void observeState(PropertyChangeListener propertyChangeListener) {

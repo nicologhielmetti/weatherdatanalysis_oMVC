@@ -1,8 +1,6 @@
 package Utils;
 
 import State.ArchState;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import java.util.zip.DataFormatException;
 
 
 /**
@@ -81,10 +78,9 @@ public class StoreLogger {
         this.logger.log(Level.INFO, "@@POST_TIMESTAMP@@");
         this.logger.log(Level.INFO, new Date().getTime()+"");
         this.logger.log(Level.INFO, "@@POST_STATE@@");
-        this.logger.log(Level.INFO, "HttpServletRequest: " + new HttpServletRequestSerialized(archState.getRequests().get(requestIdentifier), requestIdentifier).serialize());
         this.logger.log(Level.INFO, "Outcome: " + serverOutcome.getOutcome());
         if (serverOutcome.getException() == null) {
-            this.logger.log(Level.INFO, "ModifiedDBInfo: " + archState.getWebAppState().getModifiedDbInfo().get(requestIdentifier));
+            this.logger.log(Level.INFO, "ModifiedDBInfo: " + archState.getWebAppState().getLogMap().get(requestIdentifier));
         }
         this.logger.log(Level.INFO, "@@END_LOG_ITEM@@");
     }

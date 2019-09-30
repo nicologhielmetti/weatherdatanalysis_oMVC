@@ -110,7 +110,7 @@ public class HibernateUtil
     }
 
     public static HibernateResult executeInsert(Collection<?> data) {
-        if (!data.iterator().next().getClass().getPackage().getName().equals("Model"))
+        if (!data.iterator().next().getClass().getPackage().getName().equals("State.Model"))
             throw new IllegalArgumentException();
         Session session = HibernateUtil.getSessionFactory().openSession();
 
@@ -148,7 +148,7 @@ public class HibernateUtil
     }
 
     public static HibernateResult executeInsert(Object data) {
-        if (!data.getClass().getPackage().getName().equals("Model"))
+        if (!data.getClass().getPackage().getName().equals("State.Model"))
             throw new IllegalArgumentException();
         Session session = HibernateUtil.getSessionFactory().openSession();
 

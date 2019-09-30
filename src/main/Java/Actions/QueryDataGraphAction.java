@@ -2,7 +2,7 @@ package Actions;
 
 import java.util.ArrayList;
 
-public class FilterDataToDisplayAction extends Action{
+public class QueryDataGraphAction extends Action{
 
     private ArrayList<Integer> stationIds;
     private Long beginTimestamp;
@@ -10,8 +10,8 @@ public class FilterDataToDisplayAction extends Action{
     private String weatherDimension;
     private Boolean isAvgRequired;
 
-    public FilterDataToDisplayAction(ArrayList<Integer> stationIds, Long beginTimestamp, Long endTimestamp, String weatherDimension, Boolean isAvgRequired) {
-        super("@FILTER_DATA_TO_DISPLAY", "@CONCRETE_RESOLVER");
+    public QueryDataGraphAction(ArrayList<Integer> stationIds, Long beginTimestamp, Long endTimestamp, String weatherDimension, Boolean isAvgRequired) {
+        super("@QUERY_DATA_TO_DISPLAY", "@CONCRETE_RESOLVER");
         this.stationIds = stationIds;
         this.beginTimestamp = beginTimestamp;
         this.endTimestamp = endTimestamp;
@@ -41,7 +41,7 @@ public class FilterDataToDisplayAction extends Action{
 
     @Override
     public String toString() {
-        return "FilterDataToDisplayAction{" +
+        return "QueryDataGraphAction{" +
                 "stationIds=" + stationIds +
                 ", beginTimestamp=" + beginTimestamp +
                 ", endTimestamp=" + endTimestamp +
