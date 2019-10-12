@@ -32,6 +32,16 @@
         <servlet-name>QueryDataGraphServlet</servlet-name>
         <servlet-class>ViewNormal.QueryDataGraphServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>RegisterStationServlet</servlet-name>
+        <servlet-class>ViewNormal.RegisterStationServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>DownloadDataServlet</servlet-name>
+        <servlet-class>ViewNormal.DownloadDataServlet</servlet-class>
+    </servlet>
 
     <!-- servlet mapping-->
     <servlet-mapping>
@@ -57,6 +67,16 @@
     <servlet-mapping>
         <servlet-name>QueryDataGraphServlet</servlet-name>
         <url-pattern>/QueryDataGraph</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>RegisterStationServlet</servlet-name>
+        <url-pattern>/RegisterStation</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>DownloadDataServlet</servlet-name>
+        <url-pattern>/DownloadData</url-pattern>
     </servlet-mapping>
     
     <!--jsp-->

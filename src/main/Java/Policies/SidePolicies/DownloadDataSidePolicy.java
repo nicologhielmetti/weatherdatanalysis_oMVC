@@ -9,11 +9,9 @@ import State.WebAppState;
 import Utils.HibernateResult;
 import Utils.HibernateUtil;
 import Utils.ServerOutcome;
+import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,36 +59,29 @@ public class DownloadDataSidePolicy implements SidePolicy{
             return webAppState;
         }
 
-        //create the file
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter("data_" + format.format(new Date(beginTimestamp)) + "_" +
-                    format.format(new Date(beginTimestamp)) + ".csv");
+                    format.format(new Date(endTimestamp)) + ".csv");
         } catch (FileNotFoundException e) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(new Exception(),
-                    "Cannot find the file."));
+            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "File not found."));
         }
+
+
         printWriter.println(((Datum) data.get(0)).getFieldsNameAsCSV());
         for (Object datum : data)
             printWriter.println(((Datum) datum).getFieldsAsCSV());
         printWriter.close();
-        return webAppState;
 
-        /*
-        To be done in the servlet?
-        //download the file
-        response.setContentType("Application/CSV");
-        response.setHeader("Content-Disposition", "attachment; filename=" + "data_" + request.getParameter("begin_date").replace('/', '-') + "_" + request.getParameter("end_date").replace('/', '-') + ".csv");
-        OutputStream out = response.getOutputStream();
-        FileInputStream in = new FileInputStream("data_" + request.getParameter("begin_date").replace('/', '-') + "_" + request.getParameter("end_date").replace('/', '-') + ".csv");
-        byte[] buffer = new byte[4096];
-        int length;
-        while ((length = in.read(buffer)) > 0)
-            out.write(buffer, 0, length);
-        in.close();
-        out.flush();*/
+        try {
+            webAppState.getServerOutcomeMap().put(requestIdentifier,
+                    new ServerOutcome(null, new ObjectMapper().writeValueAsString(data)));
+        } catch (IOException e) {
+            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "Error in parsing the data."));
+        }
+        return webAppState;
 
     }
 }

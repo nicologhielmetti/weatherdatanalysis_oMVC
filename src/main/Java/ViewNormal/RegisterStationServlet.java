@@ -1,13 +1,9 @@
 package ViewNormal;
 
-import Actions.CreateStationAction;
-import Actions.RetrieveMinimizedStationsAction;
+import Actions.RegisterStationAction;
 import State.ArchState;
-import State.Model.MinimizedStation;
 import State.WebAppState;
 import Stores.Store;
-import Utils.ServerOutcome;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,18 +15,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 
-@WebServlet(name = "CreateStationServlet")
-public class CreateStationServlet extends HttpServlet {
+@WebServlet(name = "RegisterStationServlet")
+public class RegisterStationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final Long requestIdentifier = new Date().getTime();
-        CreateStationAction createStationAction = new CreateStationAction(new BufferedReader(new InputStreamReader(
-                request.getInputStream(), StandardCharsets.UTF_8)));
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        RegisterStationAction registerStationAction = new RegisterStationAction(new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8)));
         ArchState archState = ArchState.getInstance();
-        archState.getActions().put(requestIdentifier, createStationAction);
+        archState.getActions().put(requestIdentifier, registerStationAction);
         archState.getRequests().put(requestIdentifier, request);
         archState.getResponses().put(requestIdentifier, response);
+
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
             public void onWebAppStateChange(String actionId, Long requestId) throws IOException, ServletException {
@@ -38,18 +35,17 @@ public class CreateStationServlet extends HttpServlet {
                     ArchState archState = ArchState.getInstance();
                     HttpServletRequest request = archState.getRequests().get(requestId);
                     HttpServletResponse response = archState.getResponses().get(requestId);
-                    response.setContentType("text/plain");
-                    response.setCharacterEncoding("UTF-8");
+
                     response.getWriter().write((String)archState.getWebAppState().getServerOutcomeMap().get(requestId).getOutcome());
                 }
             }
         };
 
-        Store.getInstance().propagateAction(createStationAction, requestIdentifier, webAppStateChange);
+        Store.getInstance().propagateAction(registerStationAction, requestIdentifier, webAppStateChange);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("Error", "Error! GET request not supported!");
+        request.setAttribute("Error", "Error! GET request not supported");
         getServletContext().getRequestDispatcher("/Error").forward(request, response);
     }
 }

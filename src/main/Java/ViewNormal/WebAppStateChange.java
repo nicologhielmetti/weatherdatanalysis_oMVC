@@ -6,5 +6,5 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 public interface WebAppStateChange {
-    void onWebAppStateChange(WebAppState oldState, WebAppState newState, String actionId, Long requestId) throws IOException, ServletException;
+    void onWebAppStateChange(String actionId, Long requestId) throws IOException, ServletException;
 }

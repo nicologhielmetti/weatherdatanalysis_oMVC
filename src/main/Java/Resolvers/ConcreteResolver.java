@@ -4,6 +4,7 @@ import Policies.SidePolicies.DownloadDataSidePolicy;
 import Policies.SidePolicies.QueryDataGraphSidePolicy;
 import Policies.SidePolicies.LoadMinimizedStationsSidePolicy;
 import Policies.StatePolicies.CreateStationStatePolicy;
+import Policies.StatePolicies.RegisterStationStatePolicy;
 import Policies.StatePolicies.UploadDataStatePolicy;
 
 public class ConcreteResolver extends Resolver {
@@ -24,6 +25,9 @@ public class ConcreteResolver extends Resolver {
         );
         this.policiesMap.put("@DOWNLOAD_DATA_ACTION",
                 new PolicyCouple(null, new DownloadDataSidePolicy())
+        );
+        this.policiesMap.put("@REGISTER_STATION",
+                new PolicyCouple(new RegisterStationStatePolicy(), null)
         );
     }
 }

@@ -1,30 +1,24 @@
 package Actions;
 
+import java.io.BufferedReader;
 import java.net.URL;
 
 public class RegisterStationAction extends Action {
-    URL url;
-    Integer timeInterval;
+    BufferedReader br;
 
-    public RegisterStationAction(URL url, int timeInterval) {
+    public RegisterStationAction(BufferedReader br) {
         super("@REGISTER_STATION", "@CONCRETE_RESOLVER");
-        this.url = url;
-        this.timeInterval = timeInterval;
+        this.br = br;
     }
 
-    public URL getUrl() {
-        return url;
-    }
-
-    public int getTimeInterval() {
-        return timeInterval;
+    public BufferedReader getBufferedReader() {
+        return br;
     }
 
     @Override
     public String toString() {
         return "RegisterStationAction{" +
-                "url=" + url +
-                ", timeInterval=" + timeInterval +
+                "bufferedReader=" + br +
                 '}';
     }
 }

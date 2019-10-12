@@ -19,7 +19,8 @@ import java.util.Date;
 @WebServlet(name = "QueryDataGraphServlet")
 public class QueryDataGraphServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.setAttribute("Error", "Error! POST request not supported");
+        getServletContext().getRequestDispatcher("/Error").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -59,7 +60,7 @@ public class QueryDataGraphServlet extends HttpServlet {
 
             WebAppStateChange webAppStateChange = new WebAppStateChange() {
                 @Override
-                public void onWebAppStateChange(WebAppState oldState, WebAppState newState, String actionId, Long requestId) throws IOException, ServletException {
+                public void onWebAppStateChange(String actionId, Long requestId) throws IOException, ServletException {
                     if (requestId.equals(requestIdentifier)) {
                         ArchState archState = ArchState.getInstance();
                         HttpServletRequest request = archState.getRequests().get(requestId);

@@ -36,7 +36,7 @@ public class LoadMinimizedStationsServlet extends HttpServlet {
 
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
-            public void onWebAppStateChange(WebAppState oldState, WebAppState newState, String actionId, Long requestId) {
+            public void onWebAppStateChange(String actionId, Long requestId) {
                 try {
                     if (requestId.equals(requestIdentifier)) {
                         ArchState archState = ArchState.getInstance();

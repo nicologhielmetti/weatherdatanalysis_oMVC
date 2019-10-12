@@ -19,7 +19,7 @@ public class CreateStationAction extends Action{
     @Override
     public String toString() {
         return "CreateStationAction{" +
-                "station=" + br +
+                "bufferedReader=" + br +
                 "}";
     }
 }

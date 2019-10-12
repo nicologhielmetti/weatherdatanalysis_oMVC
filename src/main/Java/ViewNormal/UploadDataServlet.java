@@ -30,7 +30,7 @@ public class UploadDataServlet extends HttpServlet {
         archState.getResponses().put(requestIdentifier, response);
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
-            public void onWebAppStateChange(WebAppState oldState, WebAppState newState, String actionId, Long requestId) throws IOException, ServletException {
+            public void onWebAppStateChange(String actionId, Long requestId) throws IOException, ServletException {
                 if (requestId.equals(requestIdentifier)) {
                     ArchState archState = ArchState.getInstance();
                     HttpServletRequest request = archState.getRequests().get(requestId);
@@ -44,6 +44,7 @@ public class UploadDataServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.setAttribute("Error", "Error! GET request not supported");
+        getServletContext().getRequestDispatcher("/Error").forward(request, response);
     }
 }
