@@ -1,22 +1,11 @@
 package State;
 
+import Actions.Action;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import Actions.Action;
-
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
-/**
- * This class should contains the
- */
 
 public class ArchState implements Serializable {
     private static ArchState archState = new ArchState();

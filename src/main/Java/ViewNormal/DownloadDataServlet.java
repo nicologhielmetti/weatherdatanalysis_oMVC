@@ -48,7 +48,7 @@ public class DownloadDataServlet extends HttpServlet {
 
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
-            public void onWebAppStateChange(String actionId, Long requestId) throws IOException, ServletException {
+            public void onWebAppStateChange(Long requestId) throws IOException, ServletException {
                 if (requestId.equals(requestIdentifier)) {
                     ArchState archState = ArchState.getInstance();
                     HttpServletRequest request = archState.getRequests().get(requestId);

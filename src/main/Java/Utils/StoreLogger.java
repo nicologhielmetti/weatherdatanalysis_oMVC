@@ -80,7 +80,7 @@ public class StoreLogger {
         this.logger.log(Level.INFO, "@@POST_STATE@@");
         this.logger.log(Level.INFO, "Outcome: " + serverOutcome.getOutcome());
         if (serverOutcome.getException() == null) {
-            this.logger.log(Level.INFO, "ModifiedDBInfo: " + archState.getWebAppState().getLogMap().get(requestIdentifier));
+            this.logger.log(Level.INFO, "QueryPerformed: " + archState.getWebAppState().getLogMap().get(requestIdentifier));
         }
         this.logger.log(Level.INFO, "@@END_LOG_ITEM@@");
     }

@@ -1,13 +1,10 @@
 package ViewNormal;
 
 import Actions.CreateStationAction;
-import Actions.RetrieveMinimizedStationsAction;
 import State.ArchState;
-import State.Model.MinimizedStation;
-import State.WebAppState;
+
 import Stores.Store;
-import Utils.ServerOutcome;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,21 +16,27 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 
 @WebServlet(name = "CreateStationServlet")
 public class CreateStationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final Long requestIdentifier = new Date().getTime();
-        CreateStationAction createStationAction = new CreateStationAction(new BufferedReader(new InputStreamReader(
-                request.getInputStream(), StandardCharsets.UTF_8)));
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
+        JSONObject data = null;
+        try {
+            data = new JSONObject(br.readLine());
+        } catch (IOException e) {
+
+        }
+        CreateStationAction createStationAction = new CreateStationAction(data);
         ArchState archState = ArchState.getInstance();
         archState.getActions().put(requestIdentifier, createStationAction);
         archState.getRequests().put(requestIdentifier, request);
         archState.getResponses().put(requestIdentifier, response);
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
-            public void onWebAppStateChange(String actionId, Long requestId) throws IOException, ServletException {
+            public void onWebAppStateChange(Long requestId) throws IOException, ServletException {
                 if (requestId.equals(requestIdentifier)) {
                     ArchState archState = ArchState.getInstance();
                     HttpServletRequest request = archState.getRequests().get(requestId);

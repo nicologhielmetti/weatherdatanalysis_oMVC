@@ -1,14 +1,10 @@
 package ViewNormal;
 
-import Actions.RetrieveMinimizedStationsAction;
+import Actions.LoadMinimizedStationsAction;
 import State.ArchState;
-import State.Model.MinimizedStation;
-import State.WebAppState;
+
 import Stores.Store;
 import Utils.ServerOutcome;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
+
 
 @WebServlet(name = "LoadMinimizedStationsServlet")
 public class LoadMinimizedStationsServlet extends HttpServlet {
@@ -28,15 +24,15 @@ public class LoadMinimizedStationsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         final Long requestIdentifier = new Date().getTime();
-        RetrieveMinimizedStationsAction retrieveMinimizedStationsAction = new RetrieveMinimizedStationsAction();
+        LoadMinimizedStationsAction loadMinimizedStationsAction = new LoadMinimizedStationsAction();
         ArchState archState = ArchState.getInstance();
-        archState.getActions().put(requestIdentifier, retrieveMinimizedStationsAction);
+        archState.getActions().put(requestIdentifier, loadMinimizedStationsAction);
         archState.getRequests().put(requestIdentifier, request);
         archState.getResponses().put(requestIdentifier, response);
 
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
-            public void onWebAppStateChange(String actionId, Long requestId) {
+            public void onWebAppStateChange(Long requestId) {
                 try {
                     if (requestId.equals(requestIdentifier)) {
                         ArchState archState = ArchState.getInstance();
@@ -64,7 +60,7 @@ public class LoadMinimizedStationsServlet extends HttpServlet {
             }
         };
 
-        /*WebAppStateChangeObserver webAppStateChangeObserver = new WebAppStateChangeObserver(requestIdentifier, retrieveMinimizedStationsAction.getActionIdentifier(), new WebAppStateChange() {
+        /*WebAppStateChangeObserver webAppStateChangeObserver = new WebAppStateChangeObserver(requestIdentifier, loadMinimizedStationsAction.getActionIdentifier(), new WebAppStateChange() {
             @Override
             public void onWebAppStateChange(WebAppState oldState, WebAppState newState, String actionId, Long requestId) throws IOException, ServletException {
 
@@ -93,6 +89,6 @@ public class LoadMinimizedStationsServlet extends HttpServlet {
             }
         });*/
 
-        Store.getInstance().propagateAction(retrieveMinimizedStationsAction, requestIdentifier, webAppStateChange);
+        Store.getInstance().propagateAction(loadMinimizedStationsAction, requestIdentifier, webAppStateChange);
     }
 }

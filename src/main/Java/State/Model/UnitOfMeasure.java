@@ -16,23 +16,22 @@ public class UnitOfMeasure {
     private String rain;
     private String windModule;
     private String windDirection;
-    private String dewPt;
+    private String dewPoint;
     private String uvRadiation;
     private String snowLevel;
     private String pollutionLevel;
 
-    //mandatory
     public UnitOfMeasure() {
     }
 
-    public UnitOfMeasure(String temperature, String pressure, String humidity, String rain, String windModule, String windDirection, String dewPt, String uvRadiation, String snowLevel, String pollutionLevel) {
+    public UnitOfMeasure(String temperature, String pressure, String humidity, String rain, String windModule, String windDirection, String dewPoint, String uvRadiation, String snowLevel, String pollutionLevel) {
         this.temperature = temperature;
         this.pressure = pressure;
         this.humidity = humidity;
         this.rain = rain;
         this.windModule = windModule;
         this.windDirection = windDirection;
-        this.dewPt = dewPt;
+        this.dewPoint = dewPoint;
         this.uvRadiation = uvRadiation;
         this.snowLevel = snowLevel;
         this.pollutionLevel = pollutionLevel;
@@ -90,12 +89,12 @@ public class UnitOfMeasure {
         this.windDirection = windDirection;
     }
 
-    public String getDewPt() {
-        return dewPt;
+    public String getDewPoint() {
+        return dewPoint;
     }
 
-    public void setDewPt(String dewPt) {
-        this.dewPt = dewPt;
+    public void setDewPoint(String dewPt) {
+        this.dewPoint = dewPoint;
     }
 
     public String getUvRadiation() {
@@ -134,7 +133,7 @@ public class UnitOfMeasure {
                 Objects.equals(rain, that.rain) &&
                 Objects.equals(windModule, that.windModule) &&
                 Objects.equals(windDirection, that.windDirection) &&
-                Objects.equals(dewPt, that.dewPt) &&
+                Objects.equals(dewPoint, that.dewPoint) &&
                 Objects.equals(uvRadiation, that.uvRadiation) &&
                 Objects.equals(snowLevel, that.snowLevel) &&
                 Objects.equals(pollutionLevel, that.pollutionLevel);

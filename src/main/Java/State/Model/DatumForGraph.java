@@ -1,6 +1,5 @@
 package State.Model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DatumForGraph {

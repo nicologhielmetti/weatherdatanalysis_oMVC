@@ -2,7 +2,6 @@ package Policies.StatePolicies;
 
 import Actions.Action;
 import Actions.RegisterStationAction;
-import State.ArchState;
 import State.Model.Station;
 import State.WebAppState;
 import Utils.HibernateResult;
@@ -13,10 +12,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,14 +22,8 @@ public class RegisterStationStatePolicy implements StatePolicy {
     public WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier) {
         Map<String, Object> param = new HashMap<>();
 
-        BufferedReader br = ((RegisterStationAction)action).getBufferedReader();
-        JSONObject data = null;
-        try {
-            data = new JSONObject(br.readLine());
-        } catch (IOException e) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "{\"success\": \"false\", \"text\": \"Unable to parse the input.\"}"));
-            return webAppState;
-        }
+        JSONObject data = ((RegisterStationAction)action).getJSONObject();
+
         URL url;
         try {
             url = new URL(data.getString("URL"));

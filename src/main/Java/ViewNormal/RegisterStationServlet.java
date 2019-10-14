@@ -2,8 +2,8 @@ package ViewNormal;
 
 import Actions.RegisterStationAction;
 import State.ArchState;
-import State.WebAppState;
 import Stores.Store;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +22,14 @@ public class RegisterStationServlet extends HttpServlet {
         final Long requestIdentifier = new Date().getTime();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        RegisterStationAction registerStationAction = new RegisterStationAction(new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8)));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
+        JSONObject data = null;
+        try {
+            data = new JSONObject(br.readLine());
+        } catch (IOException e) {
+
+        }
+        RegisterStationAction registerStationAction = new RegisterStationAction(data);
         ArchState archState = ArchState.getInstance();
         archState.getActions().put(requestIdentifier, registerStationAction);
         archState.getRequests().put(requestIdentifier, request);
@@ -30,7 +37,7 @@ public class RegisterStationServlet extends HttpServlet {
 
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
-            public void onWebAppStateChange(String actionId, Long requestId) throws IOException, ServletException {
+            public void onWebAppStateChange(Long requestId) throws IOException, ServletException {
                 if (requestId.equals(requestIdentifier)) {
                     ArchState archState = ArchState.getInstance();
                     HttpServletRequest request = archState.getRequests().get(requestId);

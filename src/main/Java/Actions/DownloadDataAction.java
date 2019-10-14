@@ -1,7 +1,5 @@
 package Actions;
 
-import State.Model.Station;
-
 public class DownloadDataAction extends Action{
     private Integer idStation;
     private Long beginTimestamp;

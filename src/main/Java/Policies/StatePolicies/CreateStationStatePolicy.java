@@ -9,23 +9,21 @@ import Utils.HibernateUtil;
 import Utils.ServerOutcome;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 public class CreateStationStatePolicy implements StatePolicy{
 
     @Override
     public WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier) {
-        BufferedReader br = ((CreateStationAction)action).getBufferedReader();
+        JSONObject json = ((CreateStationAction)action).getJSONObject();
         HibernateResult result;
         try {
-            String json = br.readLine();
             ObjectMapper mapper = new ObjectMapper();
             try {
-                Station station = mapper.readValue(json, Station.class);
+                Station station = mapper.readValue(json.toString(), Station.class);
                 result = HibernateUtil.executeInsert(station);
                 webAppState.getLogMap().put(requestIdentifier, result.getMsg());
             } catch (JsonMappingException e) {

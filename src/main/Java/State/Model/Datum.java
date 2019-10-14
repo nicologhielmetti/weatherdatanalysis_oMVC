@@ -11,16 +11,6 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Datum {
 
-    /*
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE)
-    @Basic(optional = false)
-    private Integer idDatum;
-
-    private Long timestamp;
-
-    */
-
     @EmbeddedId
     private DatumPK datumPK;
 
@@ -31,12 +21,6 @@ public abstract class Datum {
     private Float windModule;
     private String windDirection;
 
-    /*
-    @JsonIgnore //This annotation is added in order to correctly serialize into json object a Station (avoiding circular references)
-    @ManyToOne
-    @JoinColumn(name="idStation")
-    private Station station;
-    */
 
     public Datum() {}
 
@@ -49,19 +33,7 @@ public abstract class Datum {
         this.windModule = windModule;
         this.windDirection = windDirection;
     }
-/*
-    public Integer getIdDatum() {
-        return idDatum;
-    }
 
-    public Long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-*/
     public Float getTemperature() {
         return temperature;
     }
@@ -109,21 +81,12 @@ public abstract class Datum {
     public void setWindDirection(String windDirection) {
         this.windDirection = windDirection;
     }
-/*
-    public Station getStation() {
-        return station;
-    }
 
-    public void setStation(Station station) {
-        this.station = station;
-    }
-*/
     public String getFieldsNameAsCSV() {
         return "timestamp" + "," + "temperature" + "," + "pressure" + "," + "humidity" + "," + "rain" + "," + "windModule" + "," + "windDirection";
     }
 
     public String getFieldsAsCSV() {
-        //return timestamp + "," + temperature + "," + pressure + "," + humidity + "," + rain + "," + windModule + "," + windDirection;
         return this.datumPK.getTimestamp() + "," + temperature + "," + pressure + "," + humidity + "," + rain + "," + windModule + "," + windDirection;
 
     }

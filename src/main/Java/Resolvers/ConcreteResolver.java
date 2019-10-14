@@ -10,11 +10,10 @@ import Policies.StatePolicies.UploadDataStatePolicy;
 public class ConcreteResolver extends Resolver {
     @Override
     protected void fillPoliciesMap() {
-        // TODO: Insert in the policiesMap all the couple "Action Identifier" and PolicyCouple
         this.policiesMap.put("@CREATE_STATION_ACTION",
                 new PolicyCouple(new CreateStationStatePolicy(), null)
         );
-        this.policiesMap.put("@RETRIEVE_MIN_STATIONS",
+        this.policiesMap.put("@LOAD_MIN_STATIONS",
                 new PolicyCouple(null, new LoadMinimizedStationsSidePolicy())
         );
         this.policiesMap.put("@UPLOAD_DATA_ACTION",

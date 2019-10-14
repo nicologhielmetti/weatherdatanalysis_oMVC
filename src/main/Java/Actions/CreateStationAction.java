@@ -1,25 +1,25 @@
 package Actions;
 
-import State.Model.Station;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 
 public class CreateStationAction extends Action{
-    BufferedReader br;
+    JSONObject data;
 
-    public CreateStationAction (BufferedReader br) {
+    public CreateStationAction (JSONObject data) {
         super("@CREATE_STATION_ACTION", "@CONCRETE_RESOLVER");
-        this.br = br;
+        this.data = data;
     }
 
-    public BufferedReader getBufferedReader() {
-        return br;
+    public JSONObject getJSONObject() {
+        return data;
     }
 
     @Override
     public String toString() {
         return "CreateStationAction{" +
-                "bufferedReader=" + br +
+                "data=" + data +
                 "}";
     }
 }

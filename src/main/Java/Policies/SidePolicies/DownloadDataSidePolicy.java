@@ -2,7 +2,6 @@ package Policies.SidePolicies;
 
 import Actions.Action;
 import Actions.DownloadDataAction;
-import Policies.StatePolicies.StatePolicy;
 import State.Model.Datum;
 import State.Model.Station;
 import State.WebAppState;

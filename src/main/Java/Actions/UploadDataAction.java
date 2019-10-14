@@ -1,10 +1,6 @@
 package Actions;
 
-import State.Model.Datum;
-import State.Model.Station;
-
 import javax.servlet.http.Part;
-import java.util.Vector;
 
 public class UploadDataAction extends Action {
     private Integer idStation;

@@ -1,24 +1,25 @@
 package Actions;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
-import java.net.URL;
 
 public class RegisterStationAction extends Action {
-    BufferedReader br;
+    JSONObject data;
 
-    public RegisterStationAction(BufferedReader br) {
+    public RegisterStationAction(JSONObject data) {
         super("@REGISTER_STATION", "@CONCRETE_RESOLVER");
-        this.br = br;
+        this.data = data;
     }
 
-    public BufferedReader getBufferedReader() {
-        return br;
+    public JSONObject getJSONObject() {
+        return data;
     }
 
     @Override
     public String toString() {
         return "RegisterStationAction{" +
-                "bufferedReader=" + br +
+                "data=" + data +
                 '}';
     }
 }

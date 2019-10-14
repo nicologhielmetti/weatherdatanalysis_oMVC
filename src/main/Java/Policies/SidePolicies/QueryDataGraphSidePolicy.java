@@ -63,8 +63,16 @@ public class QueryDataGraphSidePolicy implements SidePolicy {
                 avg = (Double) hibernateResult.getResponse();
             }
             String getTimestampQuery = "select d.datumPK.timestamp*1000 " + getDataToDownloadQuery;
-            String getMeasurementsQuery = "select " + weatherDimension.toLowerCase()
-                    + " " + getDataToDownloadQuery;
+
+            String[] splittedWeatherDimension = weatherDimension.toLowerCase().split(" ");
+            String compliantWeatherDimension = splittedWeatherDimension[0].toLowerCase();
+            for (int i = 1; i < splittedWeatherDimension.length; i++) {
+                char[] chars = splittedWeatherDimension[i].toCharArray();
+                chars[0] = Character.toUpperCase(chars[0]);
+                compliantWeatherDimension = compliantWeatherDimension.concat(String.valueOf(chars));
+            }
+
+            String getMeasurementsQuery = "select " + compliantWeatherDimension + " " + getDataToDownloadQuery;
             HibernateResult measurementsHR = HibernateUtil.executeSelect(getMeasurementsQuery, true, param);
             List<Float> measurements = (List<Float>) measurementsHR.getResponse();
             log.concat(measurementsHR.getMsg().concat("\n"));
@@ -72,8 +80,8 @@ public class QueryDataGraphSidePolicy implements SidePolicy {
             List<Long> timestamp = (List<Long>) timestampHR.getResponse();
             log.concat(timestampHR.getMsg().concat("\n"));
 
-            String weatherDimForReflection = weatherDimension.substring(0, 1).toUpperCase() +
-                    weatherDimension.substring(1).toLowerCase();
+            String weatherDimForReflection = compliantWeatherDimension.substring(0, 1).toUpperCase() +
+                    compliantWeatherDimension.substring(1);
             if (!measurements.isEmpty()) {
                 DatumForGraph data = null;
                 UnitOfMeasure unitOfMeasure = station.getUnitOfMeasure();

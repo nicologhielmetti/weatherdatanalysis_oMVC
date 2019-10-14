@@ -1,15 +1,9 @@
 package State;
 
-import Utils.HibernateResult;
-import Utils.HibernateUtil;
 import Utils.ServerOutcome;
-
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class WebAppState implements Serializable {
     private ConcurrentHashMap<Long, ServerOutcome> serverOutcomeMap;
