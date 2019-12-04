@@ -1,32 +1,61 @@
 package State;
 
-import Utils.ServerOutcome;
+import Actions.Action;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class WebAppState implements Serializable {
-    private ConcurrentHashMap<Long, ServerOutcome> serverOutcomeMap;
-    private ConcurrentHashMap<Long, String> logMap; //what the log has to save
+    private static WebAppState webAppState = new WebAppState();
 
-    WebAppState() {
-        this.serverOutcomeMap = new ConcurrentHashMap<>();
-        this.logMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, HttpServletRequest> requests;
+    private ConcurrentHashMap<Long, HttpServletResponse> responses;
+    private ConcurrentHashMap<Long, Action> actions;
+
+    private StateForPolicies stateForPolicies;
+
+    private WebAppState() {
+        this.requests = new ConcurrentHashMap<>();
+        this.responses = new ConcurrentHashMap<>();
+        this.actions = new ConcurrentHashMap<>();
+        this.stateForPolicies = new StateForPolicies();
     }
 
-    public Map<Long, ServerOutcome> getServerOutcomeMap() {
-        return serverOutcomeMap;
+    public static WebAppState getInstance() {
+        return webAppState;
     }
 
-    public void setServerOutcomeMap(ConcurrentHashMap<Long, ServerOutcome> serverOutcomeMap) {
-        this.serverOutcomeMap = serverOutcomeMap;
+    public ConcurrentMap<Long, HttpServletRequest> getRequests() {
+        return requests;
     }
 
-    public Map<Long, String> getLogMap() {
-        return logMap;
+    public void setRequests(ConcurrentHashMap<Long, HttpServletRequest> requests) {
+        this.requests = requests;
     }
 
-    public void setLogMap(ConcurrentHashMap<Long, String> modifiedDbInfo) {
-        this.logMap = modifiedDbInfo;
+    public ConcurrentMap<Long, HttpServletResponse> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(ConcurrentHashMap<Long, HttpServletResponse> responses) {
+        this.responses = responses;
+    }
+
+    public ConcurrentMap<Long, Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(ConcurrentHashMap<Long, Action> actions) {
+        this.actions = actions;
+    }
+
+    public StateForPolicies getStateForPolicies() {
+        return stateForPolicies;
+    }
+
+    public void setStateForPolicies(StateForPolicies stateForPolicies) {
+        this.stateForPolicies = stateForPolicies;
     }
 }

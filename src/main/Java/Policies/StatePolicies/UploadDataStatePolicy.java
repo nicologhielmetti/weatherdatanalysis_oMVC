@@ -3,7 +3,7 @@ package Policies.StatePolicies;
 import Actions.Action;
 import Actions.UploadDataAction;
 import State.Model.*;
-import State.WebAppState;
+import State.StateForPolicies;
 import Utils.HibernateResult;
 import Utils.HibernateUtil;
 import Utils.ServerOutcome;
@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class UploadDataStatePolicy implements StatePolicy {
     @Override
-    public WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier) {
+    public StateForPolicies apply(StateForPolicies stateForPolicies, Action action, Long requestIdentifier) {
         UploadDataAction uploadDataAction = (UploadDataAction) action;
         String hql = "FROM Station WHERE idStation = :idStation";
         Integer idStation = uploadDataAction.getIdStation();
@@ -79,14 +79,14 @@ public class UploadDataStatePolicy implements StatePolicy {
             }
 
             HibernateResult result = HibernateUtil.executeInsert(dataToUpload);
-            webAppState.getLogMap().put(requestIdentifier, result.getMsg());
+            stateForPolicies.getLogMap().put(requestIdentifier, result.getMsg());
 
         } catch (IllegalArgumentException | IOException e) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier,new ServerOutcome(e, "The .csv file you are trying to upload does not fit for the selected station. Use another one."));
-            return webAppState;
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier,new ServerOutcome(e, "The .csv file you are trying to upload does not fit for the selected station. Use another one."));
+            return stateForPolicies;
         }
 
-        webAppState.getServerOutcomeMap().put(requestIdentifier,new ServerOutcome(null, "Your .csv file has been successfully uploaded."));
-        return webAppState;
+        stateForPolicies.getServerOutcomeMap().put(requestIdentifier,new ServerOutcome(null, "Your .csv file has been successfully uploaded."));
+        return stateForPolicies;
     }
 }

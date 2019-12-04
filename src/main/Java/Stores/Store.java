@@ -4,7 +4,7 @@ import Actions.Action;
 import Resolvers.ConcreteResolver;
 import Resolvers.PolicyCouple;
 import Resolvers.Resolver;
-import State.ArchState;
+import State.WebAppState;
 import Utils.StoreLogger;
 import ViewNormal.WebAppStateChange;
 
@@ -40,12 +40,12 @@ public class Store {
             PolicyCouple policyCouple = resolver.resolve(action);
             storeLogger.logPreActionPropagation(requestIdentifier);
             if (policyCouple.getStatePolicy() != null){
-                ArchState.getInstance().setWebAppState(policyCouple.getStatePolicy().apply(ArchState.getInstance().getWebAppState(),action, requestIdentifier));
+                WebAppState.getInstance().setStateForPolicies(policyCouple.getStatePolicy().apply(WebAppState.getInstance().getStateForPolicies(),action, requestIdentifier));
 
             }
 
             if (policyCouple.getSidePolicy() != null){
-                ArchState.getInstance().setWebAppState(policyCouple.getSidePolicy().apply(ArchState.getInstance().getWebAppState(),action, requestIdentifier));
+                WebAppState.getInstance().setStateForPolicies(policyCouple.getSidePolicy().apply(WebAppState.getInstance().getStateForPolicies(),action, requestIdentifier));
             }
             storeLogger.logPostActionPropagation(requestIdentifier);
 

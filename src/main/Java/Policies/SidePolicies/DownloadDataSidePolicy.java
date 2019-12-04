@@ -4,7 +4,7 @@ import Actions.Action;
 import Actions.DownloadDataAction;
 import State.Model.Datum;
 import State.Model.Station;
-import State.WebAppState;
+import State.StateForPolicies;
 import Utils.HibernateResult;
 import Utils.HibernateUtil;
 import Utils.ServerOutcome;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class DownloadDataSidePolicy implements SidePolicy{
 
     @Override
-    public WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier) {
+    public StateForPolicies apply(StateForPolicies stateForPolicies, Action action, Long requestIdentifier) {
 
         Long beginTimestamp = ((DownloadDataAction)action).getBeginTimestamp();
         Long endTimestamp = ((DownloadDataAction)action).getEndTimestamp();
@@ -50,12 +50,12 @@ public class DownloadDataSidePolicy implements SidePolicy{
         }
         //retrieve the data required
         HibernateResult result = HibernateUtil.executeSelect(getDataToDownloadQuery, true, param);
-        webAppState.getLogMap().put(requestIdentifier, result.getMsg());
+        stateForPolicies.getLogMap().put(requestIdentifier, result.getMsg());
         List data = ((List)result.getResponse());
         if (data.size() == 0) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(new Exception(),
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(new Exception(),
                     "The csv file generated is empty! Please redo the procedure selecting other dates"));
-            return webAppState;
+            return stateForPolicies;
         }
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -65,7 +65,7 @@ public class DownloadDataSidePolicy implements SidePolicy{
             printWriter = new PrintWriter("data_" + format.format(new Date(beginTimestamp)) + "_" +
                     format.format(new Date(endTimestamp)) + ".csv");
         } catch (FileNotFoundException e) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "File not found."));
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "File not found."));
         }
 
 
@@ -75,12 +75,12 @@ public class DownloadDataSidePolicy implements SidePolicy{
         printWriter.close();
 
         try {
-            webAppState.getServerOutcomeMap().put(requestIdentifier,
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier,
                     new ServerOutcome(null, new ObjectMapper().writeValueAsString(data)));
         } catch (IOException e) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "Error in parsing the data."));
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "Error in parsing the data."));
         }
-        return webAppState;
+        return stateForPolicies;
 
     }
 }

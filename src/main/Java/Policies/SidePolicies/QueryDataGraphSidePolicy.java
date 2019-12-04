@@ -5,7 +5,7 @@ import Actions.QueryDataGraphAction;
 import State.Model.DatumForGraph;
 import State.Model.Station;
 import State.Model.UnitOfMeasure;
-import State.WebAppState;
+import State.StateForPolicies;
 import Utils.HibernateResult;
 import Utils.HibernateUtil;
 import Utils.ServerOutcome;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class QueryDataGraphSidePolicy implements SidePolicy {
     @Override
-    public WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier) {
+    public StateForPolicies apply(StateForPolicies stateForPolicies, Action action, Long requestIdentifier) {
         List<DatumForGraph> dataOfStations = new ArrayList<>();
         ArrayList<Integer> stationIds = ((QueryDataGraphAction)action).getStationIds();
         Long beginTimestamp = ((QueryDataGraphAction)action).getBeginTimestamp();
@@ -97,17 +97,17 @@ public class QueryDataGraphSidePolicy implements SidePolicy {
 
 
         if (dataOfStations.isEmpty()) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(new Exception(), "{\"success\": \"false\", \"text\": \"There are no data for the selected station in the selected time frame. Try to change the request parameter or to upload some data.\"}"));
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(new Exception(), "{\"success\": \"false\", \"text\": \"There are no data for the selected station in the selected time frame. Try to change the request parameter or to upload some data.\"}"));
         } else {
             ObjectMapper mapper = new ObjectMapper();
             String json = null;
             try {
                 json = mapper.writeValueAsString(dataOfStations);
             } catch (IOException e) {
-                webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "{\"success\": \"false\", \"text\": \"Unable to map the data.\"}"));
+                stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "{\"success\": \"false\", \"text\": \"Unable to map the data.\"}"));
             }
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(null, "{\"success\": \"true\", \"text\":" + json + "}"));
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(null, "{\"success\": \"true\", \"text\":" + json + "}"));
         }
-        return webAppState;
+        return stateForPolicies;
     }
 }

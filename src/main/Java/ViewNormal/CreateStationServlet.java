@@ -1,7 +1,7 @@
 package ViewNormal;
 
 import Actions.CreateStationAction;
-import State.ArchState;
+import State.WebAppState;
 
 import Stores.Store;
 import org.json.JSONObject;
@@ -30,20 +30,20 @@ public class CreateStationServlet extends HttpServlet {
 
         }
         CreateStationAction createStationAction = new CreateStationAction(data);
-        ArchState archState = ArchState.getInstance();
-        archState.getActions().put(requestIdentifier, createStationAction);
-        archState.getRequests().put(requestIdentifier, request);
-        archState.getResponses().put(requestIdentifier, response);
+        WebAppState webAppState = WebAppState.getInstance();
+        webAppState.getActions().put(requestIdentifier, createStationAction);
+        webAppState.getRequests().put(requestIdentifier, request);
+        webAppState.getResponses().put(requestIdentifier, response);
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
             public void onWebAppStateChange(Long requestId) throws IOException, ServletException {
                 if (requestId.equals(requestIdentifier)) {
-                    ArchState archState = ArchState.getInstance();
-                    HttpServletRequest request = archState.getRequests().get(requestId);
-                    HttpServletResponse response = archState.getResponses().get(requestId);
+                    WebAppState webAppState = WebAppState.getInstance();
+                    HttpServletRequest request = webAppState.getRequests().get(requestId);
+                    HttpServletResponse response = webAppState.getResponses().get(requestId);
                     response.setContentType("text/plain");
                     response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write((String)archState.getWebAppState().getServerOutcomeMap().get(requestId).getOutcome());
+                    response.getWriter().write((String) webAppState.getStateForPolicies().getServerOutcomeMap().get(requestId).getOutcome());
                 }
             }
         };

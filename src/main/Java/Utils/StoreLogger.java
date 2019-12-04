@@ -1,6 +1,6 @@
 package Utils;
 
-import State.ArchState;
+import State.WebAppState;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,29 +58,29 @@ public class StoreLogger {
     }
 
     public void logPreActionPropagation(Long requestIdentifier) throws IOException {
-        ArchState archState = ArchState.getInstance();
+        WebAppState webAppState = WebAppState.getInstance();
 
         this.logger.log(Level.INFO, "@@BEGIN_LOG_ITEM@@");
         this.logger.log(Level.INFO, "@@ACTION@@");
-        this.logger.log(Level.INFO, archState.getActions().get(requestIdentifier).toString());
+        this.logger.log(Level.INFO, webAppState.getActions().get(requestIdentifier).toString());
         this.logger.log(Level.INFO, "@@PRE_TIMESTAMP@@");
         this.logger.log(Level.INFO, new Date().getTime() + "");
         this.logger.log(Level.INFO, "@@PRE_STATE@@");
         this.logger.log(Level.INFO, "HttpServletRequest: " + new HttpServletRequestSerialized(
-                archState.getRequests().get(requestIdentifier), requestIdentifier).serialize()
+                webAppState.getRequests().get(requestIdentifier), requestIdentifier).serialize()
         );
     }
 
 
     public void logPostActionPropagation(Long requestIdentifier) throws IOException {
-        ArchState archState = ArchState.getInstance();
-        ServerOutcome serverOutcome = archState.getWebAppState().getServerOutcomeMap().get(requestIdentifier);
+        WebAppState webAppState = WebAppState.getInstance();
+        ServerOutcome serverOutcome = webAppState.getStateForPolicies().getServerOutcomeMap().get(requestIdentifier);
         this.logger.log(Level.INFO, "@@POST_TIMESTAMP@@");
         this.logger.log(Level.INFO, new Date().getTime()+"");
         this.logger.log(Level.INFO, "@@POST_STATE@@");
         this.logger.log(Level.INFO, "Outcome: " + serverOutcome.getOutcome());
         if (serverOutcome.getException() == null) {
-            this.logger.log(Level.INFO, "QueryPerformed: " + archState.getWebAppState().getLogMap().get(requestIdentifier));
+            this.logger.log(Level.INFO, "QueryPerformed: " + webAppState.getStateForPolicies().getLogMap().get(requestIdentifier));
         }
         this.logger.log(Level.INFO, "@@END_LOG_ITEM@@");
     }

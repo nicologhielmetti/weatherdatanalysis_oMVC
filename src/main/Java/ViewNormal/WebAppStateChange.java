@@ -1,7 +1,5 @@
 package ViewNormal;
 
-import State.WebAppState;
-
 import javax.servlet.ServletException;
 import java.io.IOException;
 

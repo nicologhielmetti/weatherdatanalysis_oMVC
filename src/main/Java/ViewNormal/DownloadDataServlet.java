@@ -1,11 +1,8 @@
 package ViewNormal;
 
 import Actions.DownloadDataAction;
-import State.ArchState;
-import State.Model.Datum;
+import State.WebAppState;
 import Stores.Store;
-import Utils.ServerOutcome;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @WebServlet(name = "DownloadDataServlet")
 public class DownloadDataServlet extends HttpServlet {
@@ -41,21 +37,21 @@ public class DownloadDataServlet extends HttpServlet {
         Integer stationId = Integer.parseInt(request.getParameter("station_id")); //1;
         DownloadDataAction downloadDataAction = new DownloadDataAction(stationId, beginTimestamp, endTimestamp);
 
-        ArchState archState = ArchState.getInstance();
-        archState.getActions().put(requestIdentifier, downloadDataAction);
-        archState.getRequests().put(requestIdentifier, request);
-        archState.getResponses().put(requestIdentifier, response);
+        WebAppState webAppState = WebAppState.getInstance();
+        webAppState.getActions().put(requestIdentifier, downloadDataAction);
+        webAppState.getRequests().put(requestIdentifier, request);
+        webAppState.getResponses().put(requestIdentifier, response);
 
         WebAppStateChange webAppStateChange = new WebAppStateChange() {
             @Override
             public void onWebAppStateChange(Long requestId) throws IOException, ServletException {
                 if (requestId.equals(requestIdentifier)) {
-                    ArchState archState = ArchState.getInstance();
-                    HttpServletRequest request = archState.getRequests().get(requestId);
-                    HttpServletResponse response = archState.getResponses().get(requestId);
+                    WebAppState webAppState = WebAppState.getInstance();
+                    HttpServletRequest request = webAppState.getRequests().get(requestId);
+                    HttpServletResponse response = webAppState.getResponses().get(requestId);
 
-                    long beginTimestamp = ((DownloadDataAction)archState.getActions().get(requestId)).getBeginTimestamp();
-                    long endTimestamp = ((DownloadDataAction)archState.getActions().get(requestId)).getEndTimestamp();
+                    long beginTimestamp = ((DownloadDataAction) webAppState.getActions().get(requestId)).getBeginTimestamp();
+                    long endTimestamp = ((DownloadDataAction) webAppState.getActions().get(requestId)).getEndTimestamp();
 
                     //create the file
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

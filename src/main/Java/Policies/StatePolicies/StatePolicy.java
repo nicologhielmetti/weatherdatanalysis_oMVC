@@ -1,8 +1,8 @@
 package Policies.StatePolicies;
 
 import Actions.Action;
-import State.WebAppState;
+import State.StateForPolicies;
 
 public interface StatePolicy {
-    WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier);
+    StateForPolicies apply(StateForPolicies stateForPolicies, Action action, Long requestIdentifier);
 }

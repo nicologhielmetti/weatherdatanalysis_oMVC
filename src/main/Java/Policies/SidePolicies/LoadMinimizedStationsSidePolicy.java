@@ -1,7 +1,7 @@
 package Policies.SidePolicies;
 
 import Actions.Action;
-import State.WebAppState;
+import State.StateForPolicies;
 import Utils.HibernateResult;
 import Utils.HibernateUtil;
 import Utils.ServerOutcome;
@@ -11,18 +11,18 @@ import java.io.IOException;
 
 public class LoadMinimizedStationsSidePolicy implements SidePolicy {
     @Override
-    public WebAppState apply(WebAppState webAppState, Action action, Long requestIdentifier) {
+    public StateForPolicies apply(StateForPolicies stateForPolicies, Action action, Long requestIdentifier) {
 
         HibernateResult result = HibernateUtil.executeSelect("SELECT new State.Model.MinimizedStation(idStation,name,type) FROM Station", true);
-        webAppState.getLogMap().put(requestIdentifier, result.getMsg());
+        stateForPolicies.getLogMap().put(requestIdentifier, result.getMsg());
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(null, mapper.writeValueAsString(result.getResponse())));
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(null, mapper.writeValueAsString(result.getResponse())));
         } catch (IOException e) {
-            webAppState.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "Unable to retrieve stations. Try again."));
+            stateForPolicies.getServerOutcomeMap().put(requestIdentifier, new ServerOutcome(e, "Unable to retrieve stations. Try again."));
         }
 
-        return webAppState;
+        return stateForPolicies;
     }
 }
