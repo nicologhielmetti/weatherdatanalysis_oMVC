@@ -1,0 +1,6 @@
+target/*
+scripts/.idea/*
+scripts/secret.py
+scripts/log.txt
+.idea/*
+.directory
